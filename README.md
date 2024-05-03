@@ -7,3 +7,6 @@ Feel free to download codes to try yourself.
 The Weather app made by Python using requests, beatifulSoup, customtkinter, pil modules.
 
 The app gets datas from https://www.accuweather.com/ and displays to users with tkinter.
+
+## Language Support
+The app displays the data based on your computer's language.
