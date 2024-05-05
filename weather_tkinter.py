@@ -4,8 +4,17 @@ import customtkinter as ctk
 from PIL import Image
 import datetime
 import locale
+import time
 
-while True:
+import requests
+from bs4 import BeautifulSoup
+import customtkinter as ctk
+from PIL import Image
+import datetime
+import locale
+
+shouldBreak = False
+while shouldBreak == False:
     try:
         def get_country_code():
             language_code, _ = locale.getdefaultlocale()
@@ -27,7 +36,7 @@ while True:
 
         # Window
         window.title("Weather Window")
-        window.geometry("450x700+500+150")
+        window.geometry("450x700+670+120")
         window.resizable(False,False)
 
         # Background
@@ -98,4 +107,53 @@ while True:
         window.mainloop()
         break
     except Exception as e:
-        print("Error. Trying again...", e)
+        shouldBreak = False
+        window = ctk.CTk(fg_color="#67b5e6")
+        
+        # Window
+        window.title("Weather Window")
+        window.geometry("450x700+670+120")
+        window.resizable(False,False)
+        
+        # Background
+        image = Image.open("weather-bg.jpg")
+        background_image = ctk.CTkImage(image, size=(450, 300))
+        bg_lbl = ctk.CTkLabel(window, text="", image=background_image,bg_color="white")
+        bg_lbl.place(x=0, y=400)
+        
+        # Time
+        text_title = ctk.CTkLabel(window,text="Weather App",font=("Segoe UI",20,"italic"),text_color="white")
+        text_title.pack(pady = 5)
+        now = datetime.datetime.now()
+        day = now.strftime("%A")
+        hour = now.strftime("%H")
+        minute = now.strftime("%M")
+        text_title.configure(text=f"{day}, {hour}:{minute}")
+        
+        # Error
+        text_error = ctk.CTkLabel(window,text="Error",font=("Segoe UI",60,"bold"),text_color="white")
+        text_error.place(y = 50, x=20)
+        
+        # Error Subtitle
+        text_subtitle = ctk.CTkLabel(window,text="Try again in 3 seconds...",font=("Segoe UI",30),text_color="white")
+        text_subtitle.place(y = 120, x=23)
+        
+        # Close App Button
+        def close_window_button():
+            global shouldBreak
+            shouldBreak = True
+            window.destroy()
+        button_close = ctk.CTkButton(window,text="Close The App",font=("Segoe UI",20),text_color="white",fg_color="red",height=75,width=200,command=close_window_button,hover_color="dark red")
+        button_close.place(y=300, x=125)
+        
+        # Countdown
+        def two_second():
+            text_subtitle.configure(text="Try again in 2 seconds...")
+        def one_second():
+            text_subtitle.configure(text="Try again in 1 seconds...")
+        def close_window():
+            window.destroy()
+        window.after(1000, two_second)
+        window.after(2000, one_second)
+        window.after(3000, close_window)
+        window.mainloop()
